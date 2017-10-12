@@ -1,0 +1,25 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.microsoft.azure.mobileapps.kwani2"
+        },
+        "cordova-plugin-ms-azure-mobile-apps": {
+            "PACKAGE_NAME": "com.microsoft.azure.mobileapps.kwani2"
+        }
+    },
+    "dependent_plugins": {
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "com.microsoft.azure.mobileapps.kwani2"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "com.microsoft.azure.mobileapps.kwani2"
+        }
+    }
+}

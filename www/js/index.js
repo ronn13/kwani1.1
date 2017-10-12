@@ -16,14 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-(function() {
+(function () {
     "use strict";
 
     var client, // Connection to the Azure Mobile App backend
         store,  // Sqlite store to use for offline data sync
         syncContext, // Offline data sync context
-        tableName = 'todoitem',
-        todoItemTable; // Reference to a table endpoint on backend
+        tableName = 'university',
+        todoItemTable, // Reference to a table endpoint on backend
+        courseTable;
 
     // Set useOfflineSync to true to use tables from local store.
     // Set useOfflineSync to false to use tables on the server.
@@ -61,11 +62,11 @@
             columnDefinitions: {
                 id: 'string',
                 deleted: 'boolean',
-                text: 'string',
-                complete: 'boolean',
+                name: 'string',
+                shortName: 'string',
                 version: 'string'
             }
-        }).then(function() {
+        }).then(function () {
             // Initialize the sync context
             syncContext = client.getSyncContext();
 
@@ -85,7 +86,7 @@
             return syncContext.initialize(store);
         });
     }
-    
+
     /**
      * Set up the tables, event handlers and load data from the server 
      */
@@ -95,7 +96,7 @@
         if (useOfflineSync) {
             todoItemTable = client.getSyncTable(tableName);
         } else {
-            todoItemTable = client.getTable(tableName);
+            todoItemTable = client.getTable(tableName);            
         }
 
         // Refresh the todoItems
@@ -118,7 +119,7 @@
             syncLocalTable().then(displayItems);
         } else {
             displayItems();
-        }    
+        }
     }
 
     /**
@@ -129,22 +130,22 @@
     function syncLocalTable() {
         return syncContext
                     .push()
-                    .then(function() {
+                    .then(function () {
                         return syncContext.pull(new WindowsAzure.Query(tableName));
                     });
     }
-    
+
     /**
      * Displays the todo items
      */
     function displayItems() {
         // Execute a query for uncompleted items and process
         todoItemTable
-            .where({ complete: false })     // Set up the query
+            //.where({ complete: false })     // Set up the query
             .read()                         // Read the results
             .then(createTodoItemList, handleError);
     }
-    
+
     /**
      * Updates the Summary Message
      * @param {string} msg the message to use
@@ -165,9 +166,7 @@
     function createTodoItem(item) {
         return $('<li>')
             .attr('data-todoitem-id', item.id)
-            .append($('<button class="item-delete">Delete</button>'))
-            .append($('<input type="checkbox" class="item-complete">').prop('checked', item.complete))
-            .append($('<div>').append($('<input class="item-text">').val(item.text)));
+            .append($('<button class="item-course">'+ item.shortName +'</button>'));
     }
 
     /**
@@ -182,9 +181,25 @@
         $('#summary').html('<strong>' + items.length + '</strong> item(s)');
 
         // Wire up the event handlers for each item in the list
-        $('.item-delete').on('click', deleteItemHandler);
-        $('.item-text').on('change', updateItemTextHandler);
-        $('.item-complete').on('change', updateItemCompleteHandler);
+        $('.item-course').on('click', courseItemHandler);
+        
+    }
+
+    function createCourseItem(item) {
+        return $('<li>')
+            .attr('data-todoitem-id', item.id)
+            .append($('<button class="item-year">' + item.name + '</button>'));
+    }
+
+    function createCourseList(items) {
+        // Cycle through each item received from Azure and add items to the item list
+        var listItems = $.map(items, createCourseItem);
+        $('#todo-items').empty().append(listItems).toggle(listItems.length > 0);
+        $('#summary').html('<strong>' + items.length + '</strong> item(s)');
+
+        // Wire up the event handlers for each item in the list
+        $('.item-year').on('click', yearItemHandler);
+
     }
 
     /**
@@ -213,34 +228,15 @@
      * @param {Event} event the event that caused the request
      * @returns {void}
      */
-    function addItemHandler(event) {
-        var textbox = $('#new-item-text'),
-            itemText = textbox.val();
-
-        updateSummaryMessage('Adding New Item');
-        if (itemText !== '') {
-            todoItemTable.insert({
-                text: itemText,
-                complete: false
-            }).then(displayItems, handleError);
-        }
-
-        textbox.val('').focus();
-        event.preventDefault();
-    }
-
-    /**
-     * Event handler for when the user clicks on Delete next to a todo item
-     * @param {Event} event the event that caused the request
-     * @returns {void}
-     */
-    function deleteItemHandler(event) {
+    function courseItemHandler(event) {        
         var itemId = getTodoItemId(event.currentTarget);
 
-        updateSummaryMessage('Deleting Item in Azure');
-        todoItemTable
-            .del({ id: itemId })   // Async send the deletion to backend
-            .then(displayItems, handleError); // Update the UI
+        updateSummaryMessage('... Loadding ...');
+        courseTable = client.getTable('course');
+        
+        courseTable
+            .read()   // Async send the deletion to backend
+            .then(createCourseList, handleError); // Update the UI
         event.preventDefault();
     }
 
