@@ -23,8 +23,9 @@
         store,  // Sqlite store to use for offline data sync
         syncContext, // Offline data sync context
         tableName = 'university',
-        todoItemTable, courseTable, courseUnitTable, // Reference to a table endpoint on backend
-        years = [] // Array used to create unique list of years;
+        todoItemTable, courseTable, courseUnitTable, handoutTable, // Reference to a table endpoint on backend
+        years = [], // Array used to create unique list of years;
+        courseId; // used to store fk of course to help with course unit navigation
 
     // Set useOfflineSync to true to use tables from local store.
     // Set useOfflineSync to false to use tables on the server.
@@ -209,7 +210,7 @@
             years.push(item.year);
             return $('<li>')
                 .attr('data-todoitem-id', item.id)
-                .append($('<button class="item-year">Year ' + item.year + '</button>'));
+                .append($('<button class="item-courseUnit">Year ' + item.year + '</button>'));
         }        
     }
 
@@ -220,8 +221,55 @@
         $('#summary').html('<strong>' + items.length + '</strong> item(s)');
 
         // Wire up the event handlers for each item in the list
-        $('.item-year').on('click', yearItemHandler);
+        $('.item-courseUnit').on('click', courseUnitItemHandler);
+    }
 
+    function createCourseUnitItem(item) {
+        return $('<li>')
+            .attr('data-todoitem-id', item.id)
+            .append($('<button class="item-handout">('+item.code+')' + item.name + '</button>'));        
+    }
+
+    function createCourseUnitList(items) {
+        // Cycle through each item received from Azure and add items to the item list
+        var listItems = $.map(items, createCourseUnitItem);
+        $('#todo-items').empty().append(listItems).toggle(listItems.length > 0);
+        $('#summary').html('<strong>' + items.length + '</strong> item(s)');
+
+        // Wire up the event handlers for each item in the list
+        $('.item-handout').on('click', handoutHandler);
+    }
+
+    function createHandoutItem(item) {
+        return $('<li>')
+            .attr('data-todoitem-id', item.id)
+            .append($('<button class="item-iframe">' + item.name + '</button>'));
+    }
+
+    function handoutList(items) {
+        // Cycle through each item received from Azure and add items to the item list
+        var listItems = $.map(items, createHandoutItem);
+        $('#todo-items').empty().append(listItems).toggle(listItems.length > 0);
+        $('#summary').html('<strong>' + items.length + '</strong> item(s)');
+
+        // Wire up the event handlers for each item in the list
+        $('.item-iframe').on('click', iframeHandler);
+    }
+
+    function createIframeItem(item) {
+        return $('<li>')
+            .attr('data-todoitem-id', item.id)
+            .append($(item.iframe));
+    }
+
+    function iframeDisplay(items) {
+        // Cycle through each item received from Azure and add items to the item list
+        var listItems = $.map(items, createIframeItem);
+        $('#todo-items').empty().append(listItems).toggle(listItems.length > 0);
+        $('#summary').html('<strong>' + items.length + '</strong> item(s)');
+
+        // Wire up the event handlers for each item in the list
+        $('.item-iframe').on('click', iframeHandler);
     }
 
     /**
@@ -253,7 +301,7 @@
     function courseItemHandler(event) {        
         var itemId = getTodoItemId(event.currentTarget);
         
-        updateSummaryMessage('... Loadding ...');
+        updateSummaryMessage('... Loading ...');
         courseTable = client.getTable('course');
         
         courseTable
@@ -264,48 +312,55 @@
     }
 
     function yearItemHandler(event) {
-        var itemId = getTodoItemId(event.currentTarget);
+        courseId = getTodoItemId(event.currentTarget);
         years = [];
 
-        updateSummaryMessage('... Loadding ...');
+        updateSummaryMessage('... Loading ...');
         courseUnitTable = client.getTable('courseUnit');
 
         courseUnitTable
-            .where({ course: itemId })
+            .where({ course: courseId })
             .orderBy('year')
             .read()   // Async send the deletion to backend
             .then(createYearList, handleError); // Update the UI
         event.preventDefault();
     }
 
-    /**
-     * Event handler for when the user updates the text of a todo item
-     * @param {Event} event the event that caused the request
-     * @returns {void}
-     */
-    function updateItemTextHandler(event) {
-        var itemId = getTodoItemId(event.currentTarget),
-            newText = $(event.currentTarget).val();
+    function courseUnitItemHandler(event) {
+        updateSummaryMessage('... Loading ...');
+        courseUnitTable = client.getTable('courseUnit');
 
-        updateSummaryMessage('Updating Item in Azure');
-        todoItemTable
-            .update({ id: itemId, text: newText })  // Async send the update to backend
-            .then(displayItems, handleError); // Update the UI
+        courseUnitTable
+            .where({ course: courseId })
+            .read()   // Async send the deletion to backend
+            .then(createCourseUnitList, handleError); // Update the UI
         event.preventDefault();
     }
 
-    /**
-     * Event handler for when the user updates the completed checkbox of a todo item
-     * @param {Event} event the event that caused the request
-     * @returns {void}
-     */
-    function updateItemCompleteHandler(event) {
-        var itemId = getTodoItemId(event.currentTarget),
-            isComplete = $(event.currentTarget).prop('checked');
+    function handoutHandler(event) {
+        var courseUnitId = getTodoItemId(event.currentTarget);
 
-        updateSummaryMessage('Updating Item in Azure');
-        todoItemTable
-            .update({ id: itemId, complete: isComplete })  // Async send the update to backend
-            .then(displayItems, handleError);        // Update the UI
+        updateSummaryMessage('... Loading ...');        
+        handoutTable = client.getTable('handout');
+
+        handoutTable
+            .where({ courseUnit: courseUnitId })
+            .read()   // Async send the deletion to backend
+            .then(handoutList, handleError); // Update the UI
+        event.preventDefault();
     }
+
+    function iframeHandler(event) {
+        var handoutId = getTodoItemId(event.currentTarget);
+
+        updateSummaryMessage('... Loading ...');
+        handoutTable = client.getTable('handout');
+
+        handoutTable
+            .where({ id: handoutId })
+            .read()   // Async send the deletion to backend
+            .then(iframeDisplay, handleError); // Update the UI
+        event.preventDefault();
+    }
+
 })();

@@ -6,7 +6,7 @@
         Azure Mobile Apps
     </author>
   <content src="index.html" />
-  <access origin="*" />
+  <access origin="https://drive.google.com" />
   <vs:features />
   <preference name="SplashScreen" value="screen" />
   <preference name="windows-target-version" value="8.1" />
@@ -107,4 +107,7 @@
     <splash src="res/screens/wp8/SplashScreenImage.jpg" width="480" height="800" />
   </platform>
   <plugin name="cordova-plugin-ms-azure-mobile-apps" spec="~2.0.0" />
+  <plugin name="cordova-plugin-inappbrowser" version="1.5.0" />
+  <plugin name="cordova-sqlite-storage" version="1.4.8" />
+  <access origin="*" />
 </widget>
