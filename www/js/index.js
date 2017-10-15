@@ -23,8 +23,8 @@
         store,  // Sqlite store to use for offline data sync
         syncContext, // Offline data sync context
         tableName = 'university',
-        todoItemTable, // Reference to a table endpoint on backend
-        courseTable;
+        todoItemTable, courseTable, courseUnitTable, // Reference to a table endpoint on backend
+        years = [] // Array used to create unique list of years;
 
     // Set useOfflineSync to true to use tables from local store.
     // Set useOfflineSync to false to use tables on the server.
@@ -202,6 +202,28 @@
 
     }
 
+    function createYearItem(item) {
+        // check if year in loop has come before
+        if ( !years.includes(item.year)) {
+            // Add years to array to check if a record with the same year has already been seen
+            years.push(item.year);
+            return $('<li>')
+                .attr('data-todoitem-id', item.id)
+                .append($('<button class="item-year">Year ' + item.year + '</button>'));
+        }        
+    }
+
+    function createYearList(items) {
+        // Cycle through each item received from Azure and add items to the item list
+        var listItems = $.map(items, createYearItem);
+        $('#todo-items').empty().append(listItems).toggle(listItems.length > 0);
+        $('#summary').html('<strong>' + items.length + '</strong> item(s)');
+
+        // Wire up the event handlers for each item in the list
+        $('.item-year').on('click', yearItemHandler);
+
+    }
+
     /**
      * Handle error conditions
      * @param {Error} error the error that needs handling
@@ -230,13 +252,29 @@
      */
     function courseItemHandler(event) {        
         var itemId = getTodoItemId(event.currentTarget);
-
+        
         updateSummaryMessage('... Loadding ...');
         courseTable = client.getTable('course');
         
         courseTable
+            .where({ university:itemId })
             .read()   // Async send the deletion to backend
             .then(createCourseList, handleError); // Update the UI
+        event.preventDefault();
+    }
+
+    function yearItemHandler(event) {
+        var itemId = getTodoItemId(event.currentTarget);
+        years = [];
+
+        updateSummaryMessage('... Loadding ...');
+        courseUnitTable = client.getTable('courseUnit');
+
+        courseUnitTable
+            .where({ course: itemId })
+            .orderBy('year')
+            .read()   // Async send the deletion to backend
+            .then(createYearList, handleError); // Update the UI
         event.preventDefault();
     }
 
