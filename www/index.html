@@ -22,35 +22,41 @@
         <meta charset="utf-8" />
         <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://kwani2.azurewebsites.net https://drive.google.com 'unsafe-eval'; style-src 'self'; media-src *">
         <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="width=device-width, user-scalable=no" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Todo list: kwani2</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <!-- Path to Framework7 Library CSS-->
+        <link rel="stylesheet" type="text/css" href="css/framework7.material.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/framework7.material.colors.min.css" />
+
+        <link rel="stylesheet" type="text/css" href="css/my-app.css" />
+        <link rel="stylesheet" type="text/css" href="css/hn7.css" />
+
+        <title>Kwani</title>
     </head>
-    <body>
-        <div id='wrapper'>
-            <article>
-                <header>
-                    <h2>Azure</h2>
-                    <h1>Mobile Apps</h1>
+    <body class="theme-deeporange">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="center">Kwani</div>
+            </div>            
+        </div>             
+        
+        <div class="page-content">        
+            <p id='summary'>Initializing...</p>
 
-                    <form id='add-item'>
-                        <button type='button' id='refresh'>Refresh</button>
-                        <button type='submit'>Add</button>
-                        <div><input type='text' id='new-item-text' placeholder='Enter new task' /></div>
-                    </form>
-                </header>
-
+            <div class="list-block">
                 <ul id='todo-items'></ul>
+            </div>
 
-                <div class='iframe-content'></div>
-
-                <p id='summary'>Initializing...</p>
-            </article>
-
-            <footer>
-                <ul id='errorlog'></ul>
-            </footer>
+            <div class='content-block' id="iframe"></div>
         </div>
+
+        <footer>
+            <ul id='errorlog'></ul>
+        </footer>
+            
+        
+        
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>

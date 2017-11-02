@@ -1,0 +1,1 @@
+{"plugins":["cordova-plugin-whitelist","cordova-plugin-ms-azure-mobile-apps","cordova-plugin-inappbrowser","cordova-sqlite-storage"]}

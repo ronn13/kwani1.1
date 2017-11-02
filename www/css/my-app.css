@@ -1,0 +1,20 @@
+img {
+   max-width: 100%;
+    height: auto;
+}
+
+div[class*="col-"] {
+  background: #fff;
+  text-align: center;
+  color: #000;
+  border: 2px solid #ddd;
+  padding: 5px;
+}
+.row {
+  margin-bottom: 15px;
+}
+
+.div item-title{
+    color: orange;
+    font-weight:bold;
+}    

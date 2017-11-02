@@ -165,9 +165,9 @@
      * @returns {jQuery} jQuery DOM object
      */
     function createTodoItem(item) {
-        return $('<li class="item-course">')
+        return $('<li>')
             .attr('data-todoitem-id', item.id)
-            .append($('<div class="item-content"><div class="item-inner"><div class="item-title color-deeporange"><strong>' + item.shortName + '</strong></div></div></div>'));
+            .append($('<button class="item-course">'+ item.shortName +'</button>'));
     }
 
     /**
@@ -187,9 +187,9 @@
     }
 
     function createCourseItem(item) {
-        return $('<li class="item-year">')
+        return $('<li>')
             .attr('data-todoitem-id', item.id)
-            .append($('<div class="item-content"><div class="item-inner"><div class="item-title color-deeporange"><strong>' + item.name + '</strong></div></div></div>'));
+            .append($('<button class="item-year">' + item.name + '</button>'));
     }
 
     function createCourseList(items) {
@@ -208,9 +208,9 @@
         if ( !years.includes(item.year)) {
             // Add years to array to check if a record with the same year has already been seen
             years.push(item.year);
-            return $('<li class="item-courseUnit">')
+            return $('<li>')
                 .attr('data-todoitem-id', item.id)
-                .append($('<div class="item-content"><div class="item-inner"><div class="item-title color-deeporange"><strong>Year ' + item.year + '</strong></div></div></div>'));
+                .append($('<button class="item-courseUnit">Year ' + item.year + '</button>'));
         }        
     }
 
@@ -225,9 +225,9 @@
     }
 
     function createCourseUnitItem(item) {
-        return $('<li class="item-handout">')
+        return $('<li>')
             .attr('data-todoitem-id', item.id)
-            .append($('<div class="item-content"><div class="item-inner"><div class="item-title color-deeporange"><strong>(' + item.code + ')' + item.name + '</strong></div></div></div>'));
+            .append($('<button class="item-handout">('+item.code+')' + item.name + '</button>'));        
     }
 
     function createCourseUnitList(items) {
@@ -241,9 +241,9 @@
     }
 
     function createHandoutItem(item) {
-        return $('<li class="item-iframe">')
+        return $('<li>')
             .attr('data-todoitem-id', item.id)
-            .append($('<div class="item-content"><div class="item-inner"><div class="item-title color-deeporange"><strong>' + item.name + '</strong></div></div></div>'));
+            .append($('<button class="item-iframe">' + item.name + '</button>'));
     }
 
     function handoutList(items) {
@@ -256,22 +256,16 @@
         $('.item-iframe').on('click', iframeHandler);
     }
 
-    /**function createIframeItem(item) {
+    function createIframeItem(item) {
         return $('<li>')
             .attr('data-todoitem-id', item.id)
-            .append($('<div class="item-content"><div class="item-inner">'+item.iframe+'</div></div>'));
-    }**/
-
-    function createIframeItem(item) {
-        return $(item.iframe);
+            .append($(item.iframe));
     }
 
     function iframeDisplay(items) {
         // Cycle through each item received from Azure and add items to the item list
-        //var listItems = $.map(items, createIframeItem);
-        var iframeItem = $.map(items, createIframeItem);
-        $('#todo-items').empty();//.append(listItems).toggle(listItems.length > 0);
-        $('#iframe').append(iframeItem).toggle(true);
+        var listItems = $.map(items, createIframeItem);
+        $('#todo-items').empty().append(listItems).toggle(listItems.length > 0);
         $('#summary').html('<strong>' + items.length + '</strong> item(s)');
 
         // Wire up the event handlers for each item in the list
