@@ -268,10 +268,11 @@
 
     function iframeDisplay(items) {
         // Cycle through each item received from Azure and add items to the item list
-        //var listItems = $.map(items, createIframeItem);
         var iframeItem = $.map(items, createIframeItem);
-        $('#todo-items').empty();//.append(listItems).toggle(listItems.length > 0);
-        $('#iframe').append(iframeItem).toggle(true);
+        $('#todo-items').empty();
+        
+        document.getElementById("content").innerHTML = "";
+        $('#content').append(iframeItem).toggle(true);
         $('#summary').html('<strong>' + items.length + '</strong> item(s)');
 
         // Wire up the event handlers for each item in the list

@@ -17,4 +17,9 @@ div[class*="col-"] {
 .div item-title{
     color: orange;
     font-weight:bold;
-}    
+}
+
+iframe{
+    height:100%;
+    width:100%;
+}
