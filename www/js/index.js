@@ -1,21 +1,4 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+
 (function () {
     "use strict";
 
@@ -25,7 +8,8 @@
         tableName = 'university',
         todoItemTable, courseTable, courseUnitTable, handoutTable, // Reference to a table endpoint on backend
         years = [], // Array used to create unique list of years;
-        courseId; // used to store fk of course to help with course unit navigation
+        courseId, // used to store fk of course to help with course unit navigation
+        old_varsity, old_course, old_year, old_cu, old_handout; //used to store the dataitem id's of the last clicked items for back navigation
 
     // Set useOfflineSync to true to use tables from local store.
     // Set useOfflineSync to false to use tables on the server.
@@ -102,10 +86,6 @@
 
         // Refresh the todoItems
         refreshDisplay();
-
-        // Wire up the UI Event Handler for the Add Item
-        $('#add-item').submit(addItemHandler);
-        $('#refresh').on('click', refreshDisplay);
     }
 
     /**
@@ -142,7 +122,6 @@
     function displayItems() {
         // Execute a query for uncompleted items and process
         todoItemTable
-            //.where({ complete: false })     // Set up the query
             .read()                         // Read the results
             .then(createTodoItemList, handleError);
     }
@@ -183,7 +162,9 @@
 
         // Wire up the event handlers for each item in the list
         $('.item-course').on('click', courseItemHandler);
-        
+
+        //change navbar
+        document.getElementById("nav").innerHTML = '<div class="center"><strong>Kwani</strong>';
     }
 
     function createCourseItem(item) {
@@ -197,10 +178,14 @@
         var listItems = $.map(items, createCourseItem);
         $('#todo-items').empty().append(listItems).toggle(listItems.length > 0);
         $('#summary').html('<strong>' + items.length + '</strong> item(s)');
-
+        
         // Wire up the event handlers for each item in the list
         $('.item-year').on('click', yearItemHandler);
 
+        //change navbar
+        document.getElementById("nav").innerHTML = '<a class="back link" id="backu" href="#"><i class="icon icon-back" style="transform: translate3d(0px, 0px, 0px);"></i><span>Back</span></a><div class="center"><strong>Kwani</strong></div>';
+        //Back button handler
+        $('#backu').on('click', refreshDisplay);
     }
 
     function createYearItem(item) {
@@ -222,6 +207,11 @@
 
         // Wire up the event handlers for each item in the list
         $('.item-courseUnit').on('click', courseUnitItemHandler);
+
+        //change navbar
+        document.getElementById("nav").innerHTML = '<a class="back link" id="backc" href="#"><i class="icon icon-back" style="transform: translate3d(0px, 0px, 0px);"></i><span>Back</span></a><div class="center"><strong>Kwani</strong></div>';
+        //Back button handler
+        $('#backc').on('click', courseBackHandler);
     }
 
     function createCourseUnitItem(item) {
@@ -238,6 +228,11 @@
 
         // Wire up the event handlers for each item in the list
         $('.item-handout').on('click', handoutHandler);
+
+        //change navbar
+        document.getElementById("nav").innerHTML = '<a class="back link" id="backcu" href="#"><i class="icon icon-back" style="transform: translate3d(0px, 0px, 0px);"></i><span>Back</span></a><div class="center"><strong>Kwani</strong></div>';
+        //Back button handler
+        $('#backcu').on('click', yearBackHandler);
     }
 
     function createHandoutItem(item) {
@@ -254,13 +249,12 @@
 
         // Wire up the event handlers for each item in the list
         $('.item-iframe').on('click', iframeHandler);
-    }
 
-    /**function createIframeItem(item) {
-        return $('<li>')
-            .attr('data-todoitem-id', item.id)
-            .append($('<div class="item-content"><div class="item-inner">'+item.iframe+'</div></div>'));
-    }**/
+        //change navbar
+        document.getElementById("nav").innerHTML = '<a class="back link" id="backh" href="#"><i class="icon icon-back" style="transform: translate3d(0px, 0px, 0px);"></i><span>Back</span></a><div class="center"><strong>Kwani</strong></div>';
+        //Back button handler
+        $('#backh').on('click', courseUnitItemHandler);
+    }
 
     function createIframeItem(item) {
         return $(item.iframe);
@@ -275,10 +269,12 @@
         $('#content').append(iframeItem).toggle(true);
         $('#summary').html('<strong>' + items.length + '</strong> item(s)');
 
-        // Wire up the event handlers for each item in the list
-        $('.item-iframe').on('click', iframeHandler);
+        //change navbar
+        document.getElementById("nav").innerHTML = '<a class="back link" id="backi" href="#"><i class="icon icon-back" style="transform: translate3d(0px, 0px, 0px);"></i><span>Back</span></a><div class="center"><strong>Kwani</strong></div>';
+        //Back button handler
+        $('#backi').on('click', handoutBackHandler);
     }
-
+    
     /**
      * Handle error conditions
      * @param {Error} error the error that needs handling
@@ -300,13 +296,10 @@
         return $(el).closest('li').attr('data-todoitem-id');
     }
 
-    /**
-     * Event handler for when the user enters some text and clicks on Add
-     * @param {Event} event the event that caused the request
-     * @returns {void}
-     */
+    //Event handler to load screen with Courses per university
     function courseItemHandler(event) {        
         var itemId = getTodoItemId(event.currentTarget);
+        old_course = itemId;
         
         updateSummaryMessage('... Loading ...');
         courseTable = client.getTable('course');
@@ -318,8 +311,21 @@
         event.preventDefault();
     }
 
+    //Event handler to go back to page with courses per University
+    function courseBackHandler(event) {
+        updateSummaryMessage('... Loading ...');
+        courseTable = client.getTable('course');
+
+        courseTable
+            .where({ university: old_course })
+            .read()   // Async send the deletion to backend
+            .then(createCourseList, handleError); // Update the UI
+        event.preventDefault();
+    }
+
     function yearItemHandler(event) {
         courseId = getTodoItemId(event.currentTarget);
+        old_year = courseId;
         years = [];
 
         updateSummaryMessage('... Loading ...');
@@ -327,6 +333,20 @@
 
         courseUnitTable
             .where({ course: courseId })
+            .orderBy('year')
+            .read()   // Async send the deletion to backend
+            .then(createYearList, handleError); // Update the UI
+        event.preventDefault();
+    }
+
+    function yearBackHandler(event) {
+        years = [];
+
+        updateSummaryMessage('... Loading ...');
+        courseUnitTable = client.getTable('courseUnit');
+
+        courseUnitTable
+            .where({ course: old_year })
             .orderBy('year')
             .read()   // Async send the deletion to backend
             .then(createYearList, handleError); // Update the UI
@@ -346,12 +366,28 @@
 
     function handoutHandler(event) {
         var courseUnitId = getTodoItemId(event.currentTarget);
+        old_cu = courseUnitId;
 
         updateSummaryMessage('... Loading ...');        
         handoutTable = client.getTable('handout');
 
         handoutTable
             .where({ courseUnit: courseUnitId })
+            .read()   // Async send the deletion to backend
+            .then(handoutList, handleError); // Update the UI
+        event.preventDefault();
+    }
+
+    function handoutBackHandler(event) {
+        updateSummaryMessage('... Loading ...');
+
+        //put required ui elements back in main page
+        document.getElementById("content").innerHTML = '<div class="list-block"><ul id="todo-items"></ul></div>'
+
+        handoutTable = client.getTable('handout');
+
+        handoutTable
+            .where({ courseUnit: old_cu })
             .read()   // Async send the deletion to backend
             .then(handoutList, handleError); // Update the UI
         event.preventDefault();
