@@ -158,8 +158,7 @@
         // Cycle through each item received from Azure and add items to the item list
         var listItems = $.map(items, createTodoItem);
         $('#todo-items').empty().append(listItems).toggle(listItems.length > 0);
-        $('#summary').html('<strong>' + items.length + '</strong> item(s)');
-
+        
         // Wire up the event handlers for each item in the list
         $('.item-course').on('click', courseItemHandler);
 
@@ -177,7 +176,6 @@
         // Cycle through each item received from Azure and add items to the item list
         var listItems = $.map(items, createCourseItem);
         $('#todo-items').empty().append(listItems).toggle(listItems.length > 0);
-        $('#summary').html('<strong>' + items.length + '</strong> item(s)');
         
         // Wire up the event handlers for each item in the list
         $('.item-year').on('click', yearItemHandler);
@@ -203,8 +201,7 @@
         // Cycle through each item received from Azure and add items to the item list
         var listItems = $.map(items, createYearItem);
         $('#todo-items').empty().append(listItems).toggle(listItems.length > 0);
-        $('#summary').html('<strong>' + items.length + '</strong> item(s)');
-
+        
         // Wire up the event handlers for each item in the list
         $('.item-courseUnit').on('click', courseUnitItemHandler);
 
@@ -224,8 +221,7 @@
         // Cycle through each item received from Azure and add items to the item list
         var listItems = $.map(items, createCourseUnitItem);
         $('#todo-items').empty().append(listItems).toggle(listItems.length > 0);
-        $('#summary').html('<strong>' + items.length + '</strong> item(s)');
-
+        
         // Wire up the event handlers for each item in the list
         $('.item-handout').on('click', handoutHandler);
 
@@ -245,8 +241,7 @@
         // Cycle through each item received from Azure and add items to the item list
         var listItems = $.map(items, createHandoutItem);
         $('#todo-items').empty().append(listItems).toggle(listItems.length > 0);
-        $('#summary').html('<strong>' + items.length + '</strong> item(s)');
-
+        
         // Wire up the event handlers for each item in the list
         $('.item-iframe').on('click', iframeHandler);
 
@@ -267,8 +262,7 @@
         
         document.getElementById("content").innerHTML = "";
         $('#content').append(iframeItem).toggle(true);
-        $('#summary').html('<strong>' + items.length + '</strong> item(s)');
-
+        
         //change navbar
         document.getElementById("nav").innerHTML = '<a class="back link" id="backi" href="#"><i class="icon icon-back" style="transform: translate3d(0px, 0px, 0px);"></i><span>Back</span></a><div class="center"><strong>Kwani</strong></div>';
         //Back button handler
