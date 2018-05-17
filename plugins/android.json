@@ -1,25 +1,40 @@
 {
-    "prepare_queue": {
-        "installed": [],
-        "uninstalled": []
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-ms-azure-mobile-apps": {
+      "PACKAGE_NAME": "com.microsoft.azure.mobileapps.kwani2"
     },
-    "config_munge": {
-        "files": {}
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.microsoft.azure.mobileapps.kwani2"
     },
-    "installed_plugins": {
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.microsoft.azure.mobileapps.kwani2"
-        },
-        "cordova-plugin-ms-azure-mobile-apps": {
-            "PACKAGE_NAME": "com.microsoft.azure.mobileapps.kwani2"
-        }
+    "cordova-plugin-buildinfo": {
+      "PACKAGE_NAME": "kwani"
     },
-    "dependent_plugins": {
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "com.microsoft.azure.mobileapps.kwani2"
-        },
-        "cordova-sqlite-storage": {
-            "PACKAGE_NAME": "com.microsoft.azure.mobileapps.kwani2"
-        }
+    "cordova-universal-links-plugin": {
+      "PACKAGE_NAME": "kwani"
+    },
+    "cordova-plugin-browsertab": {
+      "PACKAGE_NAME": "kwani"
+    },
+    "cordova-plugin-googleplus": {
+      "PACKAGE_NAME": "com.inova.kwani"
     }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.microsoft.azure.mobileapps.kwani2"
+    },
+    "cordova-sqlite-storage": {
+      "PACKAGE_NAME": "com.microsoft.azure.mobileapps.kwani2"
+    },
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "kwani"
+    }
+  }
 }

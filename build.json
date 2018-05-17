@@ -1,11 +1,11 @@
 {
      "android": {
-         "release": {
-             "keystore": "",
-             "storePassword": "",
-             "alias": "",
-             "password" : "",
-             "keystoreType": ""
-         }
+      "release": {
+        "keystore": "C:\\Work\\kwani.keystore",
+        "storePassword": "madaboutbooks",
+        "alias": "drkwani",
+        "password": "madaboutbooks",
+        "keystoreType": ""
+      }
      }
  }

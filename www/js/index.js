@@ -33,7 +33,7 @@
             setup();
         }
     }
-
+    
     /**
      * Set up and initialize the local store.
      */
@@ -164,6 +164,8 @@
 
         //change navbar
         document.getElementById("nav").innerHTML = '<div class="center"><strong>Kwani</strong>';
+
+        updateSummaryMessage('');
     }
 
     function createCourseItem(item) {
@@ -182,6 +184,9 @@
 
         //change navbar
         document.getElementById("nav").innerHTML = '<a class="back link" id="backu" href="#"><i class="icon icon-back" style="transform: translate3d(0px, 0px, 0px);"></i><span>Back</span></a><div class="center"><strong>Kwani</strong></div>';
+
+        updateSummaryMessage('');
+
         //Back button handler
         $('#backu').on('click', refreshDisplay);
     }
@@ -207,6 +212,9 @@
 
         //change navbar
         document.getElementById("nav").innerHTML = '<a class="back link" id="backc" href="#"><i class="icon icon-back" style="transform: translate3d(0px, 0px, 0px);"></i><span>Back</span></a><div class="center"><strong>Kwani</strong></div>';
+
+        updateSummaryMessage('');
+
         //Back button handler
         $('#backc').on('click', courseBackHandler);
     }
@@ -227,6 +235,9 @@
 
         //change navbar
         document.getElementById("nav").innerHTML = '<a class="back link" id="backcu" href="#"><i class="icon icon-back" style="transform: translate3d(0px, 0px, 0px);"></i><span>Back</span></a><div class="center"><strong>Kwani</strong></div>';
+
+        updateSummaryMessage('');
+
         //Back button handler
         $('#backcu').on('click', yearBackHandler);
     }
@@ -247,6 +258,9 @@
 
         //change navbar
         document.getElementById("nav").innerHTML = '<a class="back link" id="backh" href="#"><i class="icon icon-back" style="transform: translate3d(0px, 0px, 0px);"></i><span>Back</span></a><div class="center"><strong>Kwani</strong></div>';
+
+        updateSummaryMessage('');
+
         //Back button handler
         $('#backh').on('click', courseUnitItemHandler);
     }
@@ -259,12 +273,22 @@
         // Cycle through each item received from Azure and add items to the item list
         var iframeItem = $.map(items, createIframeItem);
         $('#todo-items').empty();
-        
+
         document.getElementById("content").innerHTML = "";
-        $('#content').append(iframeItem).toggle(true);
-        
+        window.plugins.googleplus.trySilentLogin(
+            {},
+            function (obj) {
+                alert(JSON.stringify(obj));
+                $('#content').append(iframeItem).toggle(true);
+            },
+            function (msg) {
+                document.querySelector("#feedback").innerHTML = "error: " + msg;
+            }
+        );        
+
         //change navbar
         document.getElementById("nav").innerHTML = '<a class="back link" id="backi" href="#"><i class="icon icon-back" style="transform: translate3d(0px, 0px, 0px);"></i><span>Back</span></a><div class="center"><strong>Kwani</strong></div>';
+        updateSummaryMessage('');
         //Back button handler
         $('#backi').on('click', handoutBackHandler);
     }
@@ -376,7 +400,7 @@
         updateSummaryMessage('... Loading ...');
 
         //put required ui elements back in main page
-        document.getElementById("content").innerHTML = '<div class="list-block"><ul id="todo-items"></ul></div>'
+        document.getElementById("content").innerHTML = '<div class="list-block"><ul id="todo-items"></ul></div>';
 
         handoutTable = client.getTable('handout');
 
@@ -396,8 +420,9 @@
         handoutTable
             .where({ id: handoutId })
             .read()   // Async send the deletion to backend
-            .then(iframeDisplay, handleError); // Update the UI
+            .then(iframeDisplay, handleError);
+            
         event.preventDefault();
-    }
+    }    
 
 })();

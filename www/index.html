@@ -18,43 +18,43 @@
     under the License.
 -->
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://kwani2.azurewebsites.net https://drive.google.com 'unsafe-eval'; style-src 'self'; media-src *">
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-        <meta name="apple-mobile-web-app-capable" content="yes">
+<head>
+    <meta charset="utf-8" />
+    <meta name="csp" http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://kwani2.azurewebsites.net https://drive.google.com https://accounts.google.com/ 'unsafe-eval' 'unsafe-inline'; style-src 'self'; media-src *">
+    <meta name="csp" http-equiv="Content-Security-Policy" content="frame-src 'self' data: gap: https://kwani2.azurewebsites.net https://drive.google.com https://accounts.google.com/'unsafe-eval' 'unsafe-inline'; style-src 'self'; media-src *">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 
-        <!-- Path to Framework7 Library CSS-->
-        <link rel="stylesheet" type="text/css" href="css/framework7.material.min.css" />
-        <link rel="stylesheet" type="text/css" href="css/framework7.material.colors.min.css" />
+    <!-- Path to Framework7 Library CSS-->
+    <link rel="stylesheet" type="text/css" href="css/framework7.material.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/framework7.material.colors.min.css" />
 
-        <link rel="stylesheet" type="text/css" href="css/my-app.css" />
-        <link rel="stylesheet" type="text/css" href="css/hn7.css" />
+    <link rel="stylesheet" type="text/css" href="css/my-app.css" />
+    <link rel="stylesheet" type="text/css" href="css/hn7.css" />
 
-        <title>Kwani</title>
-    </head>
-    <body class="theme-deeporange">
-        <div class="navbar">
-            <div class="navbar-inner" id="nav"></div>            
-        </div>             
+    <title>Kwani</title>
+</head>
+<body class="theme-deeporange">
+    <div class="navbar">
+        <div class="navbar-inner" id="nav"></div>
+    </div>
+
+    <div class="page-content" id="content">
+        <p id='summary'>Initializing...</p>
         
-        <div class="page-content" id="content">        
-            <p id='summary'>Initializing...</p>
-
-            <div class="list-block">
-                <ul id='todo-items'></ul>
-            </div>
+        <div class="list-block">
+            <ul id='todo-items'></ul>
         </div>
+    </div>
 
-        <footer>
-            <ul id='errorlog'></ul>
-        </footer>
-            
-        
-        
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
-    </body>
+    <footer>
+        <ul id='errorlog'></ul>
+    </footer>
+
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+</body>
 </html>

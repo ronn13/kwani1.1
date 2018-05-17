@@ -2,5 +2,21 @@
     "name": "ZUMOAPPNAME",
     "version": "1.0.0",
     "dependencies": {
+        "cordova-android": "~5.2.1",
+        "cordova-ios": "4.2.0",
+        "cordova-plugin-googleplus": "^5.3.0",
+        "cordova-windows": "4.4.2"
+    },
+    "cordova": {
+        "platforms": [
+            "android",
+            "ios",
+            "windows"
+        ],
+        "plugins": {
+            "cordova-plugin-googleplus": {
+                "REVERSED_CLIENT_ID": "com.googleusercontent.apps.990723957367-qjpko01j7mopfbd0hcqrrbv15lih8b0r"
+            }
+        }
     }
 }
