@@ -5,8 +5,8 @@
     <ToolsVersionPromptShown>0.0</ToolsVersionPromptShown>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Android'">
-    <DebuggerFlavor>AndroidEmulator</DebuggerFlavor>
-    <AndroidEmulatorID>AndroidDevice;Device</AndroidEmulatorID>
+    <DebuggerFlavor>SimulateG5</DebuggerFlavor>
+    <AndroidEmulatorID>363F7AED-462C-46BD-9FEC-F1DD3B79916C;VS Emulator 5" KitKat (4.4) XXHDPI Phone</AndroidEmulatorID>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Android'">
     <DebuggerFlavor>AndroidEmulator</DebuggerFlavor>

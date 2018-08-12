@@ -94,8 +94,8 @@
      * with the server table before displaying the todo items.
      */
     function refreshDisplay() {
-        updateSummaryMessage('Loading Data from Azure');
-
+        updateSummaryMessage('<div class="loader"></div>');        
+        
         if (useOfflineSync) {
             syncLocalTable().then(displayItems);
         } else {
@@ -275,17 +275,8 @@
         $('#todo-items').empty();
 
         document.getElementById("content").innerHTML = "";
-        window.plugins.googleplus.trySilentLogin(
-            {},
-            function (obj) {
-                alert(JSON.stringify(obj));
-                $('#content').append(iframeItem).toggle(true);
-            },
-            function (msg) {
-                document.querySelector("#feedback").innerHTML = "error: " + msg;
-            }
-        );        
-
+        $('#content').append(iframeItem).toggle(true);
+        
         //change navbar
         document.getElementById("nav").innerHTML = '<a class="back link" id="backi" href="#"><i class="icon icon-back" style="transform: translate3d(0px, 0px, 0px);"></i><span>Back</span></a><div class="center"><strong>Kwani</strong></div>';
         updateSummaryMessage('');
@@ -319,7 +310,7 @@
         var itemId = getTodoItemId(event.currentTarget);
         old_course = itemId;
         
-        updateSummaryMessage('... Loading ...');
+        updateSummaryMessage('<div class="loader"></div>');
         courseTable = client.getTable('course');
         
         courseTable
@@ -331,7 +322,7 @@
 
     //Event handler to go back to page with courses per University
     function courseBackHandler(event) {
-        updateSummaryMessage('... Loading ...');
+        updateSummaryMessage('<div class="loader"></div>');
         courseTable = client.getTable('course');
 
         courseTable
@@ -346,7 +337,7 @@
         old_year = courseId;
         years = [];
 
-        updateSummaryMessage('... Loading ...');
+        updateSummaryMessage('<div class="loader"></div>');
         courseUnitTable = client.getTable('courseUnit');
 
         courseUnitTable
@@ -360,7 +351,7 @@
     function yearBackHandler(event) {
         years = [];
 
-        updateSummaryMessage('... Loading ...');
+        updateSummaryMessage('<div class="loader"></div>');
         courseUnitTable = client.getTable('courseUnit');
 
         courseUnitTable
@@ -372,7 +363,7 @@
     }
 
     function courseUnitItemHandler(event) {
-        updateSummaryMessage('... Loading ...');
+        updateSummaryMessage('<div class="loader"></div>');
         courseUnitTable = client.getTable('courseUnit');
 
         courseUnitTable
@@ -386,7 +377,7 @@
         var courseUnitId = getTodoItemId(event.currentTarget);
         old_cu = courseUnitId;
 
-        updateSummaryMessage('... Loading ...');        
+        updateSummaryMessage('<div class="loader"></div>');
         handoutTable = client.getTable('handout');
 
         handoutTable
@@ -397,10 +388,10 @@
     }
 
     function handoutBackHandler(event) {
-        updateSummaryMessage('... Loading ...');
+        updateSummaryMessage('<div class="loader"></div>');
 
         //put required ui elements back in main page
-        document.getElementById("content").innerHTML = '<div class="list-block"><ul id="todo-items"></ul></div>';
+        document.getElementById("content").innerHTML = "<p id='summary'></p><div class='list-block'><ul id='todo-items'></ul></div>";
 
         handoutTable = client.getTable('handout');
 
@@ -414,7 +405,7 @@
     function iframeHandler(event) {
         var handoutId = getTodoItemId(event.currentTarget);
 
-        updateSummaryMessage('... Loading ...');
+        updateSummaryMessage('<div class="loader"></div>');
         handoutTable = client.getTable('handout');
 
         handoutTable
